@@ -1,0 +1,31 @@
+## --- PADRÕES .NET ---
+[Bb]in/
+[Oo]bj/
+*.exe
+*.dll
+*.pdb
+*.swp
+.DS_Store
+
+## --- VISUAL STUDIO / VS CODE ---
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+## --- TESTES ---
+TestResults/
+*.visualstudio.testresults
+
+## --- SEGURANÇA E CONFIGURAÇÃO ---
+# Mantemos o Development para servir de modelo, 
+# mas ignoramos arquivos com segredos reais.
+.env
+appsettings.Local.json
+secrets.json
+*.pfx
+
+## --- PASTA DE PUBLICAÇÃO ---
+publish/

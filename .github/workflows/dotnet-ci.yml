@@ -1,0 +1,45 @@
+name: ClassInsight Community CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    name: Build & Test (.NET 9 Linux)
+    runs-on: ubuntu-latest
+
+    env:
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      AzureAi__Endpoint: "https://fake-endpoint.com"
+      AzureAi__ApiKey: "fake-key"
+      Jwt__Key: "Chave_De_Teste_Para_Pipeline_CI_GitHub_Actions_123"
+
+    steps:
+    - name: 📥 Checkout do Código
+      uses: actions/checkout@v4
+
+    - name: 🔧 Setup .NET 9
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: 📦 Restaurar Dependências
+      run: dotnet restore
+
+    - name: 🏗️ Build (Release)
+      run: dotnet build --configuration Release --no-restore
+
+    - name: 🧪 Rodar Testes
+      # Usamos --no-build para ganhar velocidade e --logger:trx para relatórios
+      run: dotnet test --configuration Release --no-build --verbosity normal --logger:"trx;LogFileName=test_results.trx"
+
+    - name: 📊 Upload de Resultados dos Testes
+      if: always() # Garante que o log seja salvo mesmo se o teste falhar
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: "**/TestResults/*.trx"
